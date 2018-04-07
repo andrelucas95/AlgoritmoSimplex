@@ -17,7 +17,7 @@ public class Matriz {
     }
     
     
-
+    //
     public int inciarTabela(int qtdRestricoes, int qtdVariaveis) {
         int[][] tabelaSimplex = new int[qtdRestricoes + 1][qtdVariaveis + qtdRestricoes + 1];
         return 0;
