@@ -11,37 +11,82 @@ package algoritmosimplex;
  */
 public class Matriz {
 
-    int[][] tabelaSimplex;
+    double[][] tabelaSimplex;
+    int restricoes;
+    int variaveis;
 
-    public Matriz() {
+    public Matriz(int restricoes, int variaveis ) {
+        this.restricoes = restricoes;
+        this.variaveis = variaveis;
     }
-    
-    
+
     //
-    public int inciarTabela(int qtdRestricoes, int qtdVariaveis) {
-        int[][] tabelaSimplex = new int[qtdRestricoes + 1][qtdVariaveis + qtdRestricoes + 1];
-        return 0;
+    public void inciarTabela() {
+        this.tabelaSimplex =  new double[this.retornanumLinhas()][this.retornanumColunas()];
+    }
+    
+    int retornanumLinhas(){
+        return this.restricoes + 1;
+    }
+    
+    int retornanumColunas(){
+        return this.variaveis + this.restricoes + 1;
     }
 
-    public int getCoeficinte(int linha, int coluna) {
+    public double getCoeficinte(int linha, int coluna) {
 
         return tabelaSimplex[linha][coluna];
 
     }
 
-    public int retornaMaiorCoeficiente(int qtdRestricoes, int qtdVariaveis) {
-        int maiorValor = 0;
+    public void inserirCoeficienteTabela(int linha, int coluna, double valor) {
+
+        tabelaSimplex[linha][coluna] = valor;
+
+    }
+
+    public int retornaColunaQueEntra(int qtdRestricoes, int qtdVariaveis) {
+        double maiorValor = 0;
+        int colunaQueEntra = 0;
         int linha = qtdRestricoes + 1; // Ultima linha da tabela.
         for (int coluna = 0; coluna <= qtdVariaveis + qtdRestricoes + 1; coluna++) {
             if (tabelaSimplex[linha][coluna] > maiorValor) {
-                maiorValor = tabelaSimplex[linha][coluna];
+                //maiorValor = tabelaSimplex[linha][coluna];
+                colunaQueEntra = coluna;
             }
         }
-         return maiorValor;
+        return colunaQueEntra;
     }
     
+    public int retornaLinhaQueSai(int qtdRestricoes, int qtdVariaveis, int colunaQueEntra){
+        int linhaQueSai = 0;
+        double menorDivisao = Double.MAX_VALUE;
+        for(int linha = 0; linha < qtdVariaveis + 1; linha++){
+            //Para ignorar linhas que possuam zero.
+            if(tabelaSimplex[linha][colunaQueEntra] != 0){
+               if((tabelaSimplex[linha][this.retornanumColunas()-1] / tabelaSimplex[linha][colunaQueEntra]) < menorDivisao) {
+                menorDivisao = tabelaSimplex[linha][this.retornanumColunas()-1] / tabelaSimplex[linha][colunaQueEntra];
+                linhaQueSai = linha;
+            } 
+            }
+            
+        }
+        return linhaQueSai;
+    }
+    
+    public void realizarLiLaj(int colunaQueEntra, int linhaQueSai, int linhaQueAltera){
+        /* Li - (a)* Lj
+          Li = linha que deseja modificar
+          Lj = linha da variavel que entrou
+          a = coeficiente de Li na coluna da variavel que entrou*/
+        double coeficienteA = tabelaSimplex[linhaQueSai][colunaQueEntra];
+        
+        
+        
+    
+    }
 
-    public boolean verificaUltimaLinha(int qtdRestricoes, int qtdVariaveis) {
+    public boolean verificaMelhorSolucao(int qtdRestricoes, int qtdVariaveis) {
         boolean terminou = true;
         int linha = qtdRestricoes + 1;
         for (int coluna = 0; coluna <= qtdVariaveis + qtdRestricoes + 1; coluna++) {
@@ -52,4 +97,3 @@ public class Matriz {
         return terminou;
     }
 }
-
