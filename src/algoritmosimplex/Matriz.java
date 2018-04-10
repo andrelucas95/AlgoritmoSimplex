@@ -80,6 +80,10 @@ public class Matriz {
           Lj = linha da variavel que entrou
           a = coeficiente de Li na coluna da variavel que entrou*/
         double coeficienteA = tabelaSimplex[linhaQueSai][colunaQueEntra];
+        for(int j = 0; j <= this.retornanumColunas() - 1; j++){
+            tabelaSimplex[linhaQueAltera][j] = tabelaSimplex[linhaQueAltera][j] - 
+                    (coeficienteA * tabelaSimplex[linhaQueSai][j]);
+        }
         
         
         
