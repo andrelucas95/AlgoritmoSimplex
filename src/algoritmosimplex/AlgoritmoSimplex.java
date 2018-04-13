@@ -13,6 +13,7 @@ public class AlgoritmoSimplex {
         int qtdVariaveisDecisao = 0;
         int qtdRestricoes = 0;
         int variaveisBasicas[];
+        int colunaDeFolga = 0;
         //
         Scanner input = new Scanner(System.in);
         System.out.println("# 4LG0R1TM0 S1MPL3X #");
@@ -29,40 +30,47 @@ public class AlgoritmoSimplex {
 
         for (int i = 0; i <= linha; i++) {
             for (int j = 0; j <= coluna; j++) {
-                //Variaveis de decisão
-                if (j < qtdVariaveisDecisao) {
-                    //Função Objetiva
-                    if (i == linha) {
-                        System.out.println("Para a função objetivo, digite o coeficiente de x" + (j + 1));
-                        valor = input.nextDouble();
-                        matriz.inserirCoeficienteTabela(linha, coluna, valor);
-                    }else{
+
+                //Ultima linha, refere-se aos coeficientes da função objetiva
+                /*if (matriz.ehFobjetiva(i, linha)) {
+                    if (matriz.ehUltimaColuna(j, coluna)) {
+                        matriz.inserirCoeficienteTabela(i, j, 0);
+                    }
+                    System.out.println("Para a função objetivo, digite o coeficiente de x" + (j + 1));
+                    valor = input.nextDouble();
+                    matriz.inserirCoeficienteTabela(linha, coluna, valor);
+                }*/
+                //Variaveeis de decisão
+                if (matriz.ehVdecisao(j, qtdVariaveisDecisao)) {
                     System.out.println("Para a Função " + (i + 1) + " insiria o coeficiente de x" + (j + 1) + ": ");
                     valor = input.nextDouble();
                     matriz.inserirCoeficienteTabela(i, j, valor);
+                }
+                //Variaveis de folga
+                if (matriz.ehVfolga(j, qtdVariaveisDecisao, coluna)) {
+                    //Lógica não correta
+                    if (colunaDeFolga == i) {
+                        matriz.inserirCoeficienteTabela(i, j, 1);
+                        colunaDeFolga++;
+                    } else {
+                        matriz.inserirCoeficienteTabela(i, j, 0);
                     }
                 }
-                //Última Coluna
-                if (j == coluna) {
+                //Ultima coluna, referente ao valor de 'b'
+                if (matriz.ehUltimaColuna(j, coluna)) {
                     System.out.println("Para a Função " + (i + 1) + " insiria o valor de b");
                     valor = input.nextDouble();
                     matriz.inserirCoeficienteTabela(i, j, valor);
-                }
-                if ((j > qtdVariaveisDecisao - 1) && (j <= coluna - 1)) {
-                    // é variavel de folga
-                    // resta condicao para inserir 0 ou 1
-                    matriz.inserirCoeficienteTabela(i, j, 1);
-                }
 
+                }
             }
         }
-        for (int i = 0; i < matriz.retornanumLinhas(); i++) {
-            for (int j = 0; j < coluna; j++) {
-                System.out.println("Linha : " + i + " Coluna: " + j + " Valor: " + matriz.tabelaSimplex[i][j]);
+        for (int i = 0; i <= linha; i++) {
+            for (int j = 0; j <= coluna; j++) {
+                System.out.println("Linha : " + i + " Coluna: " + j + " Valor: " + matriz.getCoeficinte(i, j));
             }
         }
-
     }
-
 }
+
 /*System.out.println("Linha : " + i + " Coluna: " + j+" Valor: "+matriz.tabelaSimplex[i][j]); */

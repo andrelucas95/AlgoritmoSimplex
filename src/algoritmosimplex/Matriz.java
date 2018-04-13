@@ -15,21 +15,21 @@ public class Matriz {
     int restricoes;
     int variaveis;
 
-    public Matriz(int restricoes, int variaveis ) {
+    public Matriz(int restricoes, int variaveis) {
         this.restricoes = restricoes;
         this.variaveis = variaveis;
     }
 
     //
     public void inciarTabela() {
-        this.tabelaSimplex =  new double[this.retornanumLinhas()][this.retornanumColunas()];
+        this.tabelaSimplex = new double[this.retornanumLinhas()][this.retornanumColunas()];
     }
-    
-    int retornanumLinhas(){
+
+    int retornanumLinhas() {
         return this.restricoes + 1;
     }
-    
-    int retornanumColunas(){
+
+    int retornanumColunas() {
         return this.variaveis + this.restricoes + 1;
     }
 
@@ -45,6 +45,22 @@ public class Matriz {
 
     }
 
+    public boolean ehVdecisao(int coluna, int qtdVariaveis) {
+        return coluna < qtdVariaveis;
+    }
+
+    public boolean ehVfolga(int colunaAtual, int qtdVariaveis, int numColunas) {
+        return colunaAtual >= qtdVariaveis && colunaAtual < numColunas;
+    }
+
+    public boolean ehFobjetiva(int linhaAtual, int numLinhas) {
+        return linhaAtual == numLinhas;
+    }
+    
+    public boolean ehUltimaColuna(int colunaAtual, int numColunas){
+        return colunaAtual == numColunas;
+    }
+
     public int retornaColunaQueEntra(int qtdRestricoes, int qtdVariaveis) {
         double maiorValor = 0;
         int colunaQueEntra = 0;
@@ -57,37 +73,34 @@ public class Matriz {
         }
         return colunaQueEntra;
     }
-    
-    public int retornaLinhaQueSai(int qtdRestricoes, int qtdVariaveis, int colunaQueEntra){
+
+    public int retornaLinhaQueSai(int qtdRestricoes, int qtdVariaveis, int colunaQueEntra) {
         int linhaQueSai = 0;
         double menorDivisao = Double.MAX_VALUE;
-        for(int linha = 0; linha < qtdVariaveis + 1; linha++){
+        for (int linha = 0; linha < qtdVariaveis + 1; linha++) {
             //Para ignorar linhas que possuam zero.
-            if(tabelaSimplex[linha][colunaQueEntra] != 0){
-               if((tabelaSimplex[linha][this.retornanumColunas()-1] / tabelaSimplex[linha][colunaQueEntra]) < menorDivisao) {
-                menorDivisao = tabelaSimplex[linha][this.retornanumColunas()-1] / tabelaSimplex[linha][colunaQueEntra];
-                linhaQueSai = linha;
-            } 
+            if (tabelaSimplex[linha][colunaQueEntra] != 0) {
+                if ((tabelaSimplex[linha][this.retornanumColunas() - 1] / tabelaSimplex[linha][colunaQueEntra]) < menorDivisao) {
+                    menorDivisao = tabelaSimplex[linha][this.retornanumColunas() - 1] / tabelaSimplex[linha][colunaQueEntra];
+                    linhaQueSai = linha;
+                }
             }
-            
+
         }
         return linhaQueSai;
     }
-    
-    public void realizarLiLaj(int colunaQueEntra, int linhaQueSai, int linhaQueAltera){
+
+    public void realizarLiLaj(int colunaQueEntra, int linhaQueSai, int linhaQueAltera) {
         /* Li - (a)* Lj
           Li = linha que deseja modificar
           Lj = linha da variavel que entrou
           a = coeficiente de Li na coluna da variavel que entrou*/
-        double coeficienteA = tabelaSimplex[linhaQueSai][colunaQueEntra];
-        for(int j = 0; j <= this.retornanumColunas() - 1; j++){
-            tabelaSimplex[linhaQueAltera][j] = tabelaSimplex[linhaQueAltera][j] - 
-                    (coeficienteA * tabelaSimplex[linhaQueSai][j]);
+        double coeficienteA = tabelaSimplex[linhaQueAltera][colunaQueEntra];
+        for (int j = 0; j <= this.retornanumColunas() - 1; j++) {
+            tabelaSimplex[linhaQueAltera][j] = tabelaSimplex[linhaQueAltera][j]
+                    - (coeficienteA * tabelaSimplex[linhaQueSai][j]);
         }
-        
-        
-        
-    
+
     }
 
     public boolean verificaMelhorSolucao(int qtdRestricoes, int qtdVariaveis) {
