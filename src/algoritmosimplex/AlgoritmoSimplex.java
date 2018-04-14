@@ -48,7 +48,7 @@ public class AlgoritmoSimplex {
                 //Variaveis de folga
                 //Lógica não correta
                 // a linha que estou perc e  a col do momento se f obj = 0 // matriz[i][j+i] = 1;
-                if (matriz.ehVfolga(j, qtdVariaveisDecisao, coluna)) {
+                if (matriz.ehColunaVfolga(j, qtdVariaveisDecisao)) {
                     //significa que esta na função objetiva logo apenas inserir 0 pra f1 f2 ... fn
                     if (i == linha) {
                         matriz.inserirCoeficienteTabela(i, j, 0);

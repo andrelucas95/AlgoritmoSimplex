@@ -49,8 +49,8 @@ public class Matriz {
         return coluna < qtdVariaveis;
     }
 
-    public boolean ehVfolga(int colunaAtual, int qtdVariaveis, int numColunas) {
-        return colunaAtual >= qtdVariaveis && colunaAtual < numColunas;
+    public boolean ehColunaVfolga(int colunaAtual, int qtdVariaveis) {
+        return colunaAtual == qtdVariaveis;
     }
 
     public boolean ehFobjetiva(int linhaAtual, int numLinhas) {
