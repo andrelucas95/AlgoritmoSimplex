@@ -13,7 +13,6 @@ public class AlgoritmoSimplex {
         int qtdVariaveisDecisao = 0;
         int qtdRestricoes = 0;
         int variaveisBasicas[];
-        int colunaDeFolga = 0;
         //
         Scanner input = new Scanner(System.in);
         System.out.println("# 4LG0R1TM0 S1MPL3X #");
@@ -47,20 +46,29 @@ public class AlgoritmoSimplex {
                     matriz.inserirCoeficienteTabela(i, j, valor);
                 }
                 //Variaveis de folga
+                //Lógica não correta
+                // a linha que estou perc e  a col do momento se f obj = 0 // matriz[i][j+i] = 1;
                 if (matriz.ehVfolga(j, qtdVariaveisDecisao, coluna)) {
-                    //Lógica não correta
-                    if (colunaDeFolga == i) {
-                        matriz.inserirCoeficienteTabela(i, j, 1);
-                        colunaDeFolga++;
-                    } else {
+                    //significa que esta na função objetiva logo apenas inserir 0 pra f1 f2 ... fn
+                    if (i == linha) {
                         matriz.inserirCoeficienteTabela(i, j, 0);
+                        // não quero que processe o segundo if, pois ja estamos na função objetivo.
+                        break;
                     }
+                    if (j + 1 < coluna) {
+                        matriz.inserirCoeficienteTabela(i, j + i, 1);
+                    }
+
                 }
                 //Ultima coluna, referente ao valor de 'b'
                 if (matriz.ehUltimaColuna(j, coluna)) {
                     System.out.println("Para a Função " + (i + 1) + " insiria o valor de b");
                     valor = input.nextDouble();
                     matriz.inserirCoeficienteTabela(i, j, valor);
+                    //O VALOR DE "B" NA FUNÇÃO OBJETIVO É SEMPRE 0.
+                    if(matriz.ehFobjetiva(i, linha)){
+                        matriz.inserirCoeficienteTabela(i, j, 0);
+                    }
 
                 }
             }
@@ -68,6 +76,7 @@ public class AlgoritmoSimplex {
         for (int i = 0; i <= linha; i++) {
             for (int j = 0; j <= coluna; j++) {
                 System.out.println("Linha : " + i + " Coluna: " + j + " Valor: " + matriz.getCoeficinte(i, j));
+                System.out.println(" ");
             }
         }
     }
