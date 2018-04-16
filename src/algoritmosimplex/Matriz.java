@@ -64,12 +64,12 @@ public class Matriz {
     public int retornaColunaQueEntra() {
         double maiorValor = 0;
         int colunaQueEntra = 0;
-        int linha = this.retornanumLinhas() - 1; // Ultima linha da tabela, partindo de 0.
+        int ultimaLinha = this.retornanumLinhas() - 1; // Ultima linha da tabela, partindo de 0.
         int numColunas = this.retornanumColunas() - 1;//Numero total de colunas partindo de 0.
-        for (int coluna = 0; coluna <= numColunas; coluna++) {
-            if (tabelaSimplex[linha][coluna] > maiorValor) {
-                maiorValor = tabelaSimplex[linha][coluna];
-                colunaQueEntra = coluna;
+        for (int colunaAtual = 0; colunaAtual <= numColunas; colunaAtual++) {
+            if (tabelaSimplex[ultimaLinha][colunaAtual] > maiorValor) {
+                maiorValor = tabelaSimplex[ultimaLinha][colunaAtual];
+                colunaQueEntra = colunaAtual;
             }
         }
         return colunaQueEntra;
@@ -79,7 +79,7 @@ public class Matriz {
         int linhaQueSai = 0;
         double menorDivisao = Double.MAX_VALUE;
         int numLinhas = this.retornanumLinhas() - 1;
-        for (int linha = 0; linha <= numLinhas; linha++) {
+        for (int linha = 0; linha < numLinhas; linha++) {
             //Para ignorar linhas que possuam zero.
             if (tabelaSimplex[linha][colunaQueEntra] != 0) {
                 if (tabelaSimplex[linha][this.retornanumColunas() - 1] != 0) {
