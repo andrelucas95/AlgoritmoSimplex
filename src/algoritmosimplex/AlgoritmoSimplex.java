@@ -13,6 +13,8 @@ public class AlgoritmoSimplex {
         int qtdVariaveisDecisao = 0;
         int qtdRestricoes = 0;
         int variaveisBasicas[];
+        int colunaQentra = 0;
+        int linhaQsai = 0;
         //
         Scanner input = new Scanner(System.in);
         System.out.println("# 4LG0R1TM0 S1MPL3X #");
@@ -79,7 +81,22 @@ public class AlgoritmoSimplex {
                 System.out.println(" ");
             }
         }
+        System.out.println(" ========================================================== ");
+        while(matriz.verificaMelhorSolucao() != true){
+            colunaQentra = matriz.retornaColunaQueEntra();
+            linhaQsai = matriz.retornaLinhaQueSai(colunaQentra);
+            if(matriz.tabelaSimplex[linhaQsai][colunaQentra] != 1){
+                matriz.dividirLinhaInteira(linhaQsai, colunaQentra);
+            }
+            matriz.verificaVariaveisBasicas(colunaQentra, linhaQsai);
+        }
+        for (int i = 0; i <= linha; i++) {
+            for (int j = 0; j <= coluna; j++) {
+                System.out.println("Linha : " + i + " Coluna: " + j + " Valor: " + matriz.getCoeficinte(i, j));
+                System.out.println(" ");
+            }
+        }
     }
 }
 
-/*System.out.println("Linha : " + i + " Coluna: " + j+" Valor: "+matriz.tabelaSimplex[i][j]); */
+

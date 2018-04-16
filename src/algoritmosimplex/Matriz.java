@@ -56,33 +56,37 @@ public class Matriz {
     public boolean ehFobjetiva(int linhaAtual, int numLinhas) {
         return linhaAtual == numLinhas;
     }
-    
-    public boolean ehUltimaColuna(int colunaAtual, int numColunas){
+
+    public boolean ehUltimaColuna(int colunaAtual, int numColunas) {
         return colunaAtual == numColunas;
     }
 
-    public int retornaColunaQueEntra(int qtdRestricoes, int qtdVariaveis) {
+    public int retornaColunaQueEntra() {
         double maiorValor = 0;
         int colunaQueEntra = 0;
-        int linha = qtdRestricoes + 1; // Ultima linha da tabela.
-        for (int coluna = 0; coluna <= qtdVariaveis + qtdRestricoes + 1; coluna++) {
+        int linha = this.retornanumLinhas() - 1; // Ultima linha da tabela, partindo de 0.
+        int numColunas = this.retornanumColunas() - 1;//Numero total de colunas partindo de 0.
+        for (int coluna = 0; coluna <= numColunas; coluna++) {
             if (tabelaSimplex[linha][coluna] > maiorValor) {
-                //maiorValor = tabelaSimplex[linha][coluna];
+                maiorValor = tabelaSimplex[linha][coluna];
                 colunaQueEntra = coluna;
             }
         }
         return colunaQueEntra;
     }
 
-    public int retornaLinhaQueSai(int qtdRestricoes, int qtdVariaveis, int colunaQueEntra) {
+    public int retornaLinhaQueSai(int colunaQueEntra) {
         int linhaQueSai = 0;
         double menorDivisao = Double.MAX_VALUE;
-        for (int linha = 0; linha < qtdVariaveis + 1; linha++) {
+        int numLinhas = this.retornanumLinhas() - 1;
+        for (int linha = 0; linha <= numLinhas; linha++) {
             //Para ignorar linhas que possuam zero.
             if (tabelaSimplex[linha][colunaQueEntra] != 0) {
-                if ((tabelaSimplex[linha][this.retornanumColunas() - 1] / tabelaSimplex[linha][colunaQueEntra]) < menorDivisao) {
-                    menorDivisao = tabelaSimplex[linha][this.retornanumColunas() - 1] / tabelaSimplex[linha][colunaQueEntra];
-                    linhaQueSai = linha;
+                if (tabelaSimplex[linha][this.retornanumColunas() - 1] != 0) {
+                    if ((tabelaSimplex[linha][this.retornanumColunas() - 1] / tabelaSimplex[linha][colunaQueEntra]) < menorDivisao) {
+                        menorDivisao = tabelaSimplex[linha][this.retornanumColunas() - 1] / tabelaSimplex[linha][colunaQueEntra];
+                        linhaQueSai = linha;
+                    }
                 }
             }
 
@@ -97,18 +101,36 @@ public class Matriz {
           a = coeficiente de Li na coluna da variavel que entrou*/
         double coeficienteA = tabelaSimplex[linhaQueAltera][colunaQueEntra];
         for (int j = 0; j <= this.retornanumColunas() - 1; j++) {
-            tabelaSimplex[linhaQueAltera][j] = tabelaSimplex[linhaQueAltera][j]
-                    - (coeficienteA * tabelaSimplex[linhaQueSai][j]);
+            tabelaSimplex[linhaQueAltera][j] = tabelaSimplex[linhaQueAltera][j] - (coeficienteA * tabelaSimplex[linhaQueSai][j]);
         }
-
     }
 
-    public boolean verificaMelhorSolucao(int qtdRestricoes, int qtdVariaveis) {
+    //Função para transformar o coeficiente em um 1 caso ele seja != de 1.
+    public void dividirLinhaInteira(int linhaQsai, int colunaQentra) {
+        double valor = tabelaSimplex[linhaQsai][colunaQentra];
+        for (int j = 0; j <= this.retornanumColunas() - 1; j++) {
+            tabelaSimplex[linhaQsai][j] = (tabelaSimplex[linhaQsai][j] / valor);
+        }
+    }
+
+    //Verifica as linhas da coluna que entra para validar como uma variavel basica.
+    public void verificaVariaveisBasicas(int colunaQentra, int linhaQsai) {
+        for (int i = 0; i <= this.retornanumLinhas() - 1; i++) {
+            if (i != linhaQsai) {
+                if (tabelaSimplex[i][colunaQentra] != 0) {
+                    this.realizarLiLaj(colunaQentra, linhaQsai, i);
+                }
+            }
+        }
+    }
+
+    public boolean verificaMelhorSolucao() {
         boolean terminou = true;
-        int linha = qtdRestricoes + 1;
-        for (int coluna = 0; coluna <= qtdVariaveis + qtdRestricoes + 1; coluna++) {
+        int linha = this.retornanumLinhas() - 1;
+        for (int coluna = 0; coluna <= this.retornanumColunas() - 1; coluna++) {
             if (tabelaSimplex[linha][coluna] > 0) {
                 terminou = false;
+                break;
             }
         }
         return terminou;
